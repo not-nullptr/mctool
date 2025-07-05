@@ -1,50 +1,24 @@
-name: Build and Release
+name: Build
+
+permissions: {}
 
 on:
+  pull_request:
   push:
     branches:
-      - '**'
+      - main
+
+env:
+  CARGO_INCREMENTAL: 0
 
 jobs:
-  build-and-release:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y pkg-config libssl-dev
-
-      - name: Set up Rust
-        uses: actions/setup-rust@v1
-        with:
-          rust-version: stable
-          target: x86_64-unknown-linux-gnu
-
-      - name: Cache cargo registry
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Build release binary
-        run: cargo build --release --target x86_64-unknown-linux-gnu
-
-      - name: Create release archive
-        run: |
-          mkdir -p dist
-          cp target/x86_64-unknown-linux-gnu/release/* dist/ || true
-          cd dist
-          tar czf release.tar.gz *
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: auto-release-${{ github.sha }}
-          name: Auto Release
-          files: dist/release.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v4
+    - run: rustup update
+    - run: apt-get update && apt-get install -y libssl-dev pkg-config
+    - run: cargo build --release
+    - uses: actions/upload-artifact@v4
+      with:
+        path: target/release/mctool
