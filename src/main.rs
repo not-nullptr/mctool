@@ -65,7 +65,12 @@ async fn main() {
         .unwrap_or_else(|e| on_failure(format!("failed to parse the data for {}", &version), e));
 
     if let Some(ref download) = version_info.downloads.server {
-        println!("{}", download.url);
+        let java = version_info
+            .java_version
+            .map(|v| v.major_version)
+            .unwrap_or(17);
+
+        println!("{},{java}", download.url);
     } else {
         on_failure("server doesn't exist for version", &version);
     }
