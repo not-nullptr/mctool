@@ -24,26 +24,26 @@ jobs:
       with:
         path: target/release/mctool
   release:
-   name: Publish release
-   needs: build
-   runs-on: ubuntu:latest
-   permissions:
-     contents: write
-   steps:
-     - name: Checkout
-       uses: actions/checkout@v4
+    name: Publish release
+    runs-on: ubuntu:latest
+    needs: build
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-     - name: Download artifacts
-       uses: actions/download-artifact@v4
-       with:
-         path: artifacts/
-     - name: Create release
-       uses: softprops/action-gh-release@v2
-       with:
-         tag_name: nightly-${{ github.sha }}
-         name: "Nightly build #${{ github.run_number }}"
-         draft: false
-         prerelease: false
-         files: artifacts/mctool
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly-${{ github.sha }}
+          name: "Nightly build #${{ github.run_number }}"
+          draft: false
+          prerelease: false
+          files: artifacts/mctool
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
