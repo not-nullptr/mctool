@@ -42,6 +42,6 @@ jobs:
           name: "Nightly build #${{ github.run_number }}"
           draft: false
           prerelease: false
-          files: artifacts/artifact/*
+          files: mctools/artifact
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
