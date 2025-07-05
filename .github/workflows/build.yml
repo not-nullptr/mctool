@@ -35,7 +35,7 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
-      - run: ls -la
+      - run: ls -la artifact
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
@@ -43,6 +43,6 @@ jobs:
           name: "Nightly build #${{ github.run_number }}"
           draft: false
           prerelease: false
-          files: mctools/artifact
+          files: artifact
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
